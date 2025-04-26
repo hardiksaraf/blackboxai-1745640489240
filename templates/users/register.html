@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Register - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+    <div class="px-6 py-8">
+        <h2 class="text-2xl font-bold text-center text-gray-800 mb-8">Create an Account</h2>
+        
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            
+            <div class="space-y-4">
+                {{ form|crispy }}
+            </div>
+
+            <div class="flex items-center justify-between mt-6">
+                <div class="text-sm">
+                    <a href="{% url 'account_login' %}" class="font-medium text-indigo-600 hover:text-indigo-500">
+                        Already have an account?
+                    </a>
+                </div>
+                <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    Register
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="mt-8 text-center text-sm text-gray-600">
+    <p>By registering, you agree to our 
+        <a href="/terms/" class="text-indigo-600 hover:text-indigo-500">Terms of Service</a> and 
+        <a href="/privacy/" class="text-indigo-600 hover:text-indigo-500">Privacy Policy</a>
+    </p>
+</div>
+
+<!-- Registration Benefits -->
+<div class="mt-12 max-w-2xl mx-auto">
+    <h3 class="text-xl font-semibold text-center text-gray-800 mb-6">Why Register with Us?</h3>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white p-6 rounded-lg shadow-sm">
+            <div class="flex items-center mb-4">
+                <i class="fas fa-search text-indigo-600 text-xl"></i>
+                <h4 class="ml-3 text-lg font-medium text-gray-800">Find Perfect Venues</h4>
+            </div>
+            <p class="text-gray-600">Browse through our curated selection of venues for any occasion.</p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow-sm">
+            <div class="flex items-center mb-4">
+                <i class="fas fa-calendar-check text-indigo-600 text-xl"></i>
+                <h4 class="ml-3 text-lg font-medium text-gray-800">Easy Booking</h4>
+            </div>
+            <p class="text-gray-600">Book venues with just a few clicks and manage your reservations easily.</p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow-sm">
+            <div class="flex items-center mb-4">
+                <i class="fas fa-star text-indigo-600 text-xl"></i>
+                <h4 class="ml-3 text-lg font-medium text-gray-800">Verified Reviews</h4>
+            </div>
+            <p class="text-gray-600">Read authentic reviews from real customers to make informed decisions.</p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow-sm">
+            <div class="flex items-center mb-4">
+                <i class="fas fa-shield-alt text-indigo-600 text-xl"></i>
+                <h4 class="ml-3 text-lg font-medium text-gray-800">Secure Payments</h4>
+            </div>
+            <p class="text-gray-600">Your transactions are protected with industry-standard security.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
