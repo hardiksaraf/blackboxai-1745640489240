@@ -1,0 +1,136 @@
+{% comment %}
+Usage Example:
+{% include 'core/tags/alert.html' with 
+    type='success'
+    title='Success!'
+    message='Your changes have been saved.'
+    dismissible=True
+    icon='check-circle'
+    actions=actions
+%}
+
+Types: success, error, warning, info
+Actions format:
+[
+    {'label': 'View', 'url': '/view/', 'style': 'primary'},
+    {'label': 'Dismiss', 'style': 'secondary', 'onclick': 'dismissAlert()'}
+]
+{% endcomment %}
+
+{% with 
+    bg_color=type|default:'info'|yesno:'bg-green-50,bg-red-50,bg-yellow-50,bg-blue-50'
+    text_color=type|default:'info'|yesno:'text-green-800,text-red-800,text-yellow-800,text-blue-800'
+    icon_color=type|default:'info'|yesno:'text-green-400,text-red-400,text-yellow-400,text-blue-400'
+    button_color=type|default:'info'|yesno:'text-green-500,text-red-500,text-yellow-500,text-blue-500'
+    hover_color=type|default:'info'|yesno:'hover:bg-green-100,hover:bg-red-100,hover:bg-yellow-100,hover:bg-blue-100'
+    ring_color=type|default:'info'|yesno:'focus:ring-green-600,focus:ring-red-600,focus:ring-yellow-600,focus:ring-blue-600'
+%}
+<div x-data="{ show: true }"
+     x-show="show"
+     x-transition:enter="transform ease-out duration-300 transition"
+     x-transition:enter-start="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+     x-transition:enter-end="translate-y-0 opacity-100 sm:translate-x-0"
+     x-transition:leave="transition ease-in duration-100"
+     x-transition:leave-start="opacity-100"
+     x-transition:leave-end="opacity-0"
+     class="rounded-md p-4 {{ bg_color }}">
+    <div class="flex">
+        <!-- Icon -->
+        {% if icon %}
+        <div class="flex-shrink-0">
+            <i class="fas fa-{{ icon }} h-5 w-5 {{ icon_color }}"></i>
+        </div>
+        {% endif %}
+
+        <div class="{% if icon %}ml-3{% endif %} w-0 flex-1">
+            <!-- Title and Message -->
+            <div class="flex justify-between">
+                {% if title %}
+                <h3 class="text-sm font-medium {{ text_color }}">{{ title }}</h3>
+                {% endif %}
+                
+                <!-- Dismiss Button -->
+                {% if dismissible %}
+                <div class="ml-4 flex-shrink-0">
+                    <button type="button"
+                            @click="show = false"
+                            class="inline-flex rounded-md {{ bg_color }} {{ button_color }} hover:{{ text_color }} focus:outline-none focus:ring-2 focus:ring-offset-2 {{ ring_color }}">
+                        <span class="sr-only">Dismiss</span>
+                        <i class="fas fa-times h-5 w-5"></i>
+                    </button>
+                </div>
+                {% endif %}
+            </div>
+
+            {% if message %}
+            <div class="mt-2">
+                <p class="text-sm {{ text_color }}">{{ message }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Actions -->
+            {% if actions %}
+            <div class="mt-4">
+                <div class="-mx-2 -my-1.5 flex">
+                    {% for action in actions %}
+                        {% if action.url %}
+                            <a href="{{ action.url }}"
+                               class="rounded-md px-2 py-1.5 text-sm font-medium {{ button_color }} {{ hover_color }} focus:outline-none focus:ring-2 focus:ring-offset-2 {{ ring_color }}">
+                                {{ action.label }}
+                            </a>
+                        {% else %}
+                            <button type="button"
+                                    {% if action.onclick %}onclick="{{ action.onclick }}"{% endif %}
+                                    class="rounded-md px-2 py-1.5 text-sm font-medium {{ button_color }} {{ hover_color }} focus:outline-none focus:ring-2 focus:ring-offset-2 {{ ring_color }}">
+                                {{ action.label }}
+                            </button>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Toast Variant -->
+{% if toast %}
+<div x-data="{ show: true }"
+     x-show="show"
+     x-init="setTimeout(() => show = false, duration || 5000)"
+     @keydown.escape.window="show = false"
+     x-transition:enter="transform ease-out duration-300 transition"
+     x-transition:enter-start="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+     x-transition:enter-end="translate-y-0 opacity-100 sm:translate-x-0"
+     x-transition:leave="transition ease-in duration-100"
+     x-transition:leave-start="opacity-100"
+     x-transition:leave-end="opacity-0"
+     class="fixed bottom-0 right-0 mb-4 mr-4 w-full max-w-sm overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+    <div class="p-4">
+        <div class="flex items-start">
+            {% if icon %}
+            <div class="flex-shrink-0">
+                <i class="fas fa-{{ icon }} h-6 w-6 {{ icon_color }}"></i>
+            </div>
+            {% endif %}
+            <div class="{% if icon %}ml-3{% endif %} w-0 flex-1">
+                {% if title %}
+                <p class="text-sm font-medium text-gray-900">{{ title }}</p>
+                {% endif %}
+                {% if message %}
+                <p class="mt-1 text-sm text-gray-500">{{ message }}</p>
+                {% endif %}
+            </div>
+            <div class="ml-4 flex flex-shrink-0">
+                <button type="button"
+                        @click="show = false"
+                        class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    <span class="sr-only">Close</span>
+                    <i class="fas fa-times h-5 w-5"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endwith %}
