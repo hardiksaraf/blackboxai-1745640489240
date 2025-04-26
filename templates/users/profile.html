@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}My Profile - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <!-- Profile Header -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <div class="flex items-center space-x-6">
+            <div class="relative">
+                {% if user.profile_picture %}
+                    <img src="{{ user.profile_picture.url }}" alt="Profile picture" class="w-24 h-24 rounded-full object-cover">
+                {% else %}
+                    <div class="w-24 h-24 rounded-full bg-indigo-100 flex items-center justify-center">
+                        <span class="text-3xl text-indigo-600">{{ user.get_initials }}</span>
+                    </div>
+                {% endif %}
+                <button type="button" 
+                        class="absolute bottom-0 right-0 bg-indigo-600 text-white rounded-full p-2 hover:bg-indigo-700"
+                        onclick="document.getElementById('profile-picture-modal').classList.remove('hidden')">
+                    <i class="fas fa-camera"></i>
+                </button>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">{{ user.get_full_name|default:user.username }}</h1>
+                <p class="text-gray-600">{{ user.email }}</p>
+                <p class="text-sm text-gray-500 mt-1">Member since {{ user.date_joined|date:"F Y" }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Form -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="p-6">
+            <h2 class="text-xl font-semibold text-gray-800 mb-6">Profile Information</h2>
+            
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <!-- Personal Information -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        {{ user_form.first_name|crispy }}
+                    </div>
+                    <div>
+                        {{ user_form.last_name|crispy }}
+                    </div>
+                    <div>
+                        {{ user_form.phone_number|crispy }}
+                    </div>
+                    <div>
+                        {{ user_form.date_of_birth|crispy }}
+                    </div>
+                </div>
+
+                <!-- Profile Information -->
+                <div class="border-t pt-6 mt-6">
+                    <h3 class="text-lg font-medium text-gray-800 mb-4">Additional Information</h3>
+                    <div class="grid grid-cols-1 gap-6">
+                        {{ profile_form.bio|crispy }}
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {{ profile_form.location|crispy }}
+                            {{ profile_form.website|crispy }}
+                        </div>
+                        {% if user.is_vendor %}
+                            {{ profile_form.company_name|crispy }}
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex justify-end pt-6 border-t">
+                    <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Account Settings -->
+    <div class="bg-white rounded-lg shadow-md mt-6 p-6">
+        <h2 class="text-xl font-semibold text-gray-800 mb-6">Account Settings</h2>
+        
+        <!-- Email Change -->
+        <div class="flex items-center justify-between py-4 border-b">
+            <div>
+                <h3 class="text-lg font-medium text-gray-800">Email Address</h3>
+                <p class="text-gray-600">{{ user.email }}</p>
+            </div>
+            <a href="{% url 'users:change_email' %}" class="text-indigo-600 hover:text-indigo-500">Change</a>
+        </div>
+
+        <!-- Password Change -->
+        <div class="flex items-center justify-between py-4 border-b">
+            <div>
+                <h3 class="text-lg font-medium text-gray-800">Password</h3>
+                <p class="text-gray-600">Last changed: Never</p>
+            </div>
+            <a href="{% url 'account_change_password' %}" class="text-indigo-600 hover:text-indigo-500">Change</a>
+        </div>
+
+        <!-- Account Deletion -->
+        <div class="flex items-center justify-between py-4">
+            <div>
+                <h3 class="text-lg font-medium text-gray-800">Delete Account</h3>
+                <p class="text-gray-600">Permanently delete your account and all data</p>
+            </div>
+            <button type="button" 
+                    class="text-red-600 hover:text-red-500"
+                    onclick="document.getElementById('delete-account-modal').classList.remove('hidden')">
+                Delete Account
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Profile Picture Modal -->
+<div id="profile-picture-modal" class="fixed inset-0 bg-gray-500 bg-opacity-75 hidden" aria-hidden="true">
+    <div class="flex items-center justify-center min-h-screen">
+        <div class="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Update Profile Picture</h3>
+            
+            <form method="post" enctype="multipart/form-data" class="space-y-4">
+                {% csrf_token %}
+                {{ picture_form|crispy }}
+                
+                <div class="flex justify-end space-x-3">
+                    <button type="button" 
+                            class="px-4 py-2 text-gray-700 hover:text-gray-900"
+                            onclick="document.getElementById('profile-picture-modal').classList.add('hidden')">
+                        Cancel
+                    </button>
+                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">
+                        Upload
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Account Modal -->
+<div id="delete-account-modal" class="fixed inset-0 bg-gray-500 bg-opacity-75 hidden" aria-hidden="true">
+    <div class="flex items-center justify-center min-h-screen">
+        <div class="bg-white rounded-lg shadow-xl p-6 max-w-md w-full mx-4">
+            <h3 class="text-lg font-medium text-gray-900 mb-2">Delete Account</h3>
+            <p class="text-gray-600 mb-4">Are you sure you want to delete your account? This action cannot be undone.</p>
+            
+            <form method="post" action="{% url 'users:delete_account' %}" class="space-y-4">
+                {% csrf_token %}
+                <div class="flex justify-end space-x-3">
+                    <button type="button" 
+                            class="px-4 py-2 text-gray-700 hover:text-gray-900"
+                            onclick="document.getElementById('delete-account-modal').classList.add('hidden')">
+                        Cancel
+                    </button>
+                    <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700">
+                        Delete Account
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
