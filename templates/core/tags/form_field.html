@@ -1,0 +1,147 @@
+{% comment %}
+Usage Example:
+{% include 'core/tags/form_field.html' with field=form.email label="Email Address" help_text="We'll never share your email" %}
+
+Parameters:
+- field: (required) The form field to render
+- label: (optional) Custom label text (defaults to field.label)
+- help_text: (optional) Help text to display below the field
+- required: (optional) Whether the field is required (defaults to field.field.required)
+- error_messages: (optional) List of error messages to display
+- placeholder: (optional) Placeholder text for the input
+- prefix_icon: (optional) Font Awesome icon class for prefix (e.g., 'fa-envelope')
+- suffix_icon: (optional) Font Awesome icon class for suffix (e.g., 'fa-check')
+- wrapper_class: (optional) Additional classes for the wrapper div
+- input_class: (optional) Additional classes for the input element
+{% endcomment %}
+
+<div class="form-group {% if wrapper_class %}{{ wrapper_class }}{% endif %}">
+    <!-- Label -->
+    <label for="{{ field.id_for_label }}" 
+           class="block text-sm font-medium text-gray-700 {% if field.errors %}text-red-600{% endif %}">
+        {{ label|default:field.label }}
+        {% if required|default:field.field.required %}
+            <span class="text-red-500">*</span>
+        {% endif %}
+    </label>
+
+    <!-- Field Wrapper -->
+    <div class="mt-1 relative rounded-md shadow-sm">
+        <!-- Prefix Icon -->
+        {% if prefix_icon %}
+        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="fas {{ prefix_icon }} text-gray-400"></i>
+        </div>
+        {% endif %}
+
+        <!-- Input Field -->
+        {% if field.field.widget.input_type == 'select' %}
+            <select name="{{ field.name }}" 
+                    id="{{ field.id_for_label }}"
+                    {% if field.field.required %}required{% endif %}
+                    class="block w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm
+                           {% if field.errors %}border-red-300 text-red-900 placeholder-red-300 
+                           focus:border-red-500 focus:ring-red-500{% endif %}
+                           {% if prefix_icon %}pl-10{% endif %}
+                           {% if suffix_icon %}pr-10{% endif %}
+                           {% if input_class %}{{ input_class }}{% endif %}">
+                {{ field }}
+            </select>
+        {% elif field.field.widget.input_type == 'textarea' %}
+            <textarea name="{{ field.name }}"
+                     id="{{ field.id_for_label }}"
+                     {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+                     {% if field.field.required %}required{% endif %}
+                     class="block w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm
+                            {% if field.errors %}border-red-300 text-red-900 placeholder-red-300 
+                            focus:border-red-500 focus:ring-red-500{% endif %}
+                            {% if prefix_icon %}pl-10{% endif %}
+                            {% if suffix_icon %}pr-10{% endif %}
+                            {% if input_class %}{{ input_class }}{% endif %}">{{ field.value|default:'' }}</textarea>
+        {% elif field.field.widget.input_type == 'checkbox' %}
+            <div class="flex items-center">
+                <input type="checkbox"
+                       name="{{ field.name }}"
+                       id="{{ field.id_for_label }}"
+                       {% if field.value %}checked{% endif %}
+                       {% if field.field.required %}required{% endif %}
+                       class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500
+                              {% if field.errors %}border-red-300{% endif %}
+                              {% if input_class %}{{ input_class }}{% endif %}">
+                {% if help_text %}
+                    <span class="ml-2 text-sm text-gray-500">{{ help_text }}</span>
+                {% endif %}
+            </div>
+        {% elif field.field.widget.input_type == 'radio' %}
+            <div class="space-y-2">
+                {% for choice in field %}
+                    <div class="flex items-center">
+                        {{ choice.tag }}
+                        <label for="{{ choice.id_for_label }}" class="ml-2 text-sm text-gray-700">
+                            {{ choice.choice_label }}
+                        </label>
+                    </div>
+                {% endfor %}
+            </div>
+        {% elif field.field.widget.input_type == 'file' %}
+            <div class="flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md
+                        {% if field.errors %}border-red-300{% endif %}">
+                <div class="space-y-1 text-center">
+                    <i class="fas fa-cloud-upload-alt mx-auto h-12 w-12 text-gray-400"></i>
+                    <div class="flex text-sm text-gray-600">
+                        <label for="{{ field.id_for_label }}"
+                               class="relative cursor-pointer rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                            <span>Upload a file</span>
+                            <input type="file"
+                                   name="{{ field.name }}"
+                                   id="{{ field.id_for_label }}"
+                                   {% if field.field.required %}required{% endif %}
+                                   class="sr-only {% if input_class %}{{ input_class }}{% endif %}">
+                        </label>
+                        <p class="pl-1">or drag and drop</p>
+                    </div>
+                    <p class="text-xs text-gray-500">
+                        PNG, JPG, GIF up to 10MB
+                    </p>
+                </div>
+            </div>
+        {% else %}
+            <input type="{{ field.field.widget.input_type }}"
+                   name="{{ field.name }}"
+                   id="{{ field.id_for_label }}"
+                   value="{{ field.value|default:'' }}"
+                   {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+                   {% if field.field.required %}required{% endif %}
+                   class="block w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm
+                          {% if field.errors %}border-red-300 text-red-900 placeholder-red-300 
+                          focus:border-red-500 focus:ring-red-500{% endif %}
+                          {% if prefix_icon %}pl-10{% endif %}
+                          {% if suffix_icon %}pr-10{% endif %}
+                          {% if input_class %}{{ input_class }}{% endif %}">
+        {% endif %}
+
+        <!-- Suffix Icon -->
+        {% if suffix_icon %}
+        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+            <i class="fas {{ suffix_icon }} {% if field.errors %}text-red-500{% else %}text-gray-400{% endif %}"></i>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Help Text -->
+    {% if help_text and field.field.widget.input_type != 'checkbox' %}
+        <p class="mt-2 text-sm text-gray-500">{{ help_text }}</p>
+    {% endif %}
+
+    <!-- Error Messages -->
+    {% if field.errors %}
+        {% for error in field.errors %}
+            <p class="mt-2 text-sm text-red-600">{{ error }}</p>
+        {% endfor %}
+    {% endif %}
+    {% if error_messages %}
+        {% for message in error_messages %}
+            <p class="mt-2 text-sm text-red-600">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+</div>
