@@ -1,0 +1,171 @@
+{% comment %}
+Usage Example:
+{% with breadcrumbs=request.breadcrumbs %}
+    {% include 'core/tags/breadcrumbs.html' %}
+{% endwith %}
+
+Or with custom breadcrumbs:
+{% with breadcrumbs=custom_breadcrumbs %}
+    {% include 'core/tags/breadcrumbs.html' %}
+{% endwith %}
+
+Breadcrumb format:
+[
+    {'title': 'Home', 'url': '/'},
+    {'title': 'Venues', 'url': '/venues/'},
+    {'title': 'Current Page', 'url': None}  # Last item without URL
+]
+{% endcomment %}
+
+<nav class="flex py-4" aria-label="Breadcrumb">
+    <ol class="flex items-center space-x-2">
+        <!-- Home -->
+        <li>
+            <div>
+                <a href="{% url 'core:home' %}" class="text-gray-400 hover:text-gray-500">
+                    <i class="fas fa-home text-lg"></i>
+                    <span class="sr-only">Home</span>
+                </a>
+            </div>
+        </li>
+
+        <!-- Breadcrumb Items -->
+        {% for item in breadcrumbs %}
+            <li>
+                <div class="flex items-center">
+                    <!-- Separator -->
+                    <i class="fas fa-chevron-right text-gray-400 text-sm mx-2"></i>
+
+                    <!-- Link or Text -->
+                    {% if item.url %}
+                        <a href="{{ item.url }}" 
+                           class="text-sm font-medium text-gray-500 hover:text-gray-700">
+                            {{ item.title }}
+                        </a>
+                    {% else %}
+                        <span class="text-sm font-medium text-gray-700" aria-current="page">
+                            {{ item.title }}
+                        </span>
+                    {% endif %}
+                </div>
+            </li>
+        {% endfor %}
+    </ol>
+
+    <!-- Optional Schema.org Markup -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {% for item in breadcrumbs %}
+            {
+                "@type": "ListItem",
+                "position": {{ forloop.counter }},
+                "item": {
+                    "@id": "{{ request.scheme }}://{{ request.get_host }}{{ item.url|default:request.path }}",
+                    "name": "{{ item.title }}"
+                }
+            }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+        ]
+    }
+    </script>
+</nav>
+
+{% comment %}
+Mobile-Friendly Alternative (shows only last 2 items on small screens)
+{% endcomment %}
+<nav class="flex py-4 sm:hidden" aria-label="Breadcrumb">
+    <ol class="flex items-center space-x-2">
+        {% if breadcrumbs|length > 2 %}
+            <li>
+                <button type="button" 
+                        class="text-gray-400 hover:text-gray-500"
+                        x-data
+                        @click="$dispatch('show-full-breadcrumbs')">
+                    <i class="fas fa-ellipsis-h"></i>
+                    <span class="sr-only">Show full breadcrumb trail</span>
+                </button>
+            </li>
+        {% endif %}
+
+        {% for item in breadcrumbs|slice:"-2:" %}
+            <li>
+                <div class="flex items-center">
+                    {% if not forloop.first %}
+                        <i class="fas fa-chevron-right text-gray-400 text-sm mx-2"></i>
+                    {% endif %}
+
+                    {% if item.url %}
+                        <a href="{{ item.url }}" 
+                           class="text-sm font-medium text-gray-500 hover:text-gray-700">
+                            {{ item.title }}
+                        </a>
+                    {% else %}
+                        <span class="text-sm font-medium text-gray-700" aria-current="page">
+                            {{ item.title }}
+                        </span>
+                    {% endif %}
+                </div>
+            </li>
+        {% endfor %}
+    </ol>
+</nav>
+
+<!-- Full Breadcrumbs Modal -->
+<div x-data="{ open: false }"
+     @show-full-breadcrumbs.window="open = true"
+     x-show="open"
+     class="fixed inset-0 z-50 overflow-y-auto"
+     x-cloak>
+    <div class="flex min-h-screen items-end justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        <!-- Background overlay -->
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+             x-show="open"
+             x-transition:enter="ease-out duration-300"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="ease-in duration-200"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             @click="open = false">
+        </div>
+
+        <!-- Modal panel -->
+        <div class="inline-block transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6 sm:align-middle"
+             x-show="open"
+             x-transition:enter="ease-out duration-300"
+             x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+             x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
+             x-transition:leave="ease-in duration-200"
+             x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
+             x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
+            <div>
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Navigation Path</h3>
+                <ol class="space-y-3">
+                    {% for item in breadcrumbs %}
+                        <li class="flex items-center {% if not item.url %}font-semibold text-gray-900{% endif %}">
+                            {% if item.url %}
+                                <a href="{{ item.url }}" 
+                                   class="text-gray-600 hover:text-gray-900"
+                                   @click="open = false">
+                                    {{ item.title }}
+                                </a>
+                            {% else %}
+                                <span>{{ item.title }}</span>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ol>
+            </div>
+            <div class="mt-5 sm:mt-6">
+                <button type="button"
+                        class="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm"
+                        @click="open = false">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
