@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<h1 class="text-3xl font-bold mb-6">Admin Dashboard</h1>
+<div>
+    <h2 class="text-xl font-semibold mb-4">Analytics</h2>
+    {% if analytics %}
+    <ul>
+        <li>Total Users: {{ analytics.total_users }}</li>
+        <li>Total Vendors: {{ analytics.total_vendors }}</li>
+        <li>Total Bookings: {{ analytics.total_bookings }}</li>
+        <li>Total Revenue: ${{ analytics.total_revenue }}</li>
+    </ul>
+    {% else %}
+    <p>No analytics data available.</p>
+    {% endif %}
+</div>
+<div class="mt-8">
+    <h2 class="text-xl font-semibold mb-4">User Reports</h2>
+    {% if reports %}
+    <ul>
+        {% for report in reports %}
+        <li>
+            <strong>{{ report.reported_user }}</strong> reported by {{ report.reported_by }}: {{ report.reason }}
+            <a href="{% url 'admins:resolve_report' report.id %}" class="text-indigo-600 hover:underline">Resolve</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No user reports.</p>
+    {% endif %}
+</div>
+{% endblock %}
