@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Customer Profile{% endblock %}
+{% block content %}
+<h1 class="text-3xl font-bold mb-6">Edit Profile</h1>
+<form method="post" enctype="multipart/form-data" class="max-w-lg">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Save Changes</button>
+</form>
+{% endblock %}
