@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Customer Dashboard{% endblock %}
+{% block content %}
+<h1 class="text-3xl font-bold mb-6">Welcome, {{ profile.full_name }}</h1>
+<div>
+    <h2 class="text-xl font-semibold mb-4">Your Wishlist</h2>
+    {% if wishlist %}
+    <ul>
+        {% for item in wishlist %}
+        <li>{{ item.venue.title }}</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>You have no items in your wishlist.</p>
+    {% endif %}
+</div>
+<div class="mt-6">
+    <h2 class="text-xl font-semibold mb-4">Saved Payment Methods</h2>
+    {% if saved_cards %}
+    <ul>
+        {% for card in saved_cards %}
+        <li>{{ card.card_type }} ending in {{ card.card_last4 }}</li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>You have no saved payment methods.</p>
+    {% endif %}
+</div>
+{% endblock %}
