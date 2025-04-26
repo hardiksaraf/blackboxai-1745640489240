@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Saved Payment Methods{% endblock %}
+{% block content %}
+<h1 class="text-3xl font-bold mb-6">Saved Payment Methods</h1>
+{% if payment_methods %}
+<ul class="space-y-4">
+    {% for method in payment_methods %}
+    <li class="bg-white p-4 rounded shadow">
+        <p>{{ method.method_type }} - {{ method.gateway_reference }}</p>
+        <p>Status: {% if method.is_active %}Active{% else %}Inactive{% endif %}</p>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>You have no saved payment methods.</p>
+{% endif %}
+{% endblock %}
