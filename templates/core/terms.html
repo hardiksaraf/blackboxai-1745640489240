@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+
+{% block title %}Terms of Service - {{ block.super }}{% endblock %}
+
+{% block meta_description %}Read RentMyVenue's terms of service to understand the rules, guidelines, and agreements that govern the use of our platform.{% endblock %}
+
+{% block content %}
+<div class="bg-white">
+    <!-- Header -->
+    <div class="bg-indigo-700 py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 class="text-4xl font-extrabold text-white text-center">Terms of Service</h1>
+            <p class="mt-4 text-xl text-indigo-100 text-center">Last updated: {% now "F j, Y" %}</p>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="prose prose-indigo max-w-none">
+            <!-- Introduction -->
+            <p class="lead">
+                Welcome to RentMyVenue. By accessing or using our website and services, you agree to be bound by these Terms of Service.
+                Please read these terms carefully before using our platform.
+            </p>
+
+            <!-- Acceptance of Terms -->
+            <h2>1. Acceptance of Terms</h2>
+            <p>
+                By accessing or using RentMyVenue, you agree to be bound by these Terms of Service and all applicable laws and regulations.
+                If you do not agree with any of these terms, you are prohibited from using or accessing this site.
+            </p>
+
+            <!-- User Accounts -->
+            <h2>2. User Accounts</h2>
+            <h3>2.1 Account Creation</h3>
+            <p>
+                To use certain features of our platform, you must create an account. You agree to:
+            </p>
+            <ul>
+                <li>Provide accurate and complete information</li>
+                <li>Maintain the security of your account credentials</li>
+                <li>Promptly update any changes to your information</li>
+                <li>Accept responsibility for all activities under your account</li>
+            </ul>
+
+            <h3>2.2 Account Types</h3>
+            <p>We offer different types of accounts:</p>
+            <ul>
+                <li>Customer accounts for booking venues</li>
+                <li>Vendor accounts for listing venues</li>
+                <li>Administrator accounts for platform management</li>
+            </ul>
+
+            <!-- Booking Terms -->
+            <h2>3. Booking Terms</h2>
+            <h3>3.1 Booking Process</h3>
+            <p>
+                When making a booking through our platform:
+            </p>
+            <ul>
+                <li>All bookings are subject to venue availability</li>
+                <li>Prices are as listed at the time of booking</li>
+                <li>Additional fees may apply (cleaning, security, etc.)</li>
+                <li>Payment is required to confirm bookings</li>
+            </ul>
+
+            <h3>3.2 Cancellations</h3>
+            <p>
+                Cancellation policies vary by venue. Each venue's specific cancellation policy will be clearly displayed 
+                during the booking process.
+            </p>
+
+            <!-- Venue Listings -->
+            <h2>4. Venue Listings</h2>
+            <h3>4.1 Listing Requirements</h3>
+            <p>Venue owners must:</p>
+            <ul>
+                <li>Provide accurate venue information</li>
+                <li>Maintain up-to-date availability calendars</li>
+                <li>Respond to booking requests promptly</li>
+                <li>Comply with all applicable laws and regulations</li>
+            </ul>
+
+            <!-- Payments -->
+            <h2>5. Payments and Fees</h2>
+            <p>
+                All payments are processed securely through our platform. We charge:
+            </p>
+            <ul>
+                <li>Service fees for bookings</li>
+                <li>Commission on venue rentals</li>
+                <li>Processing fees for certain payment methods</li>
+            </ul>
+
+            <!-- Prohibited Activities -->
+            <h2>6. Prohibited Activities</h2>
+            <p>Users may not:</p>
+            <ul>
+                <li>Violate any applicable laws or regulations</li>
+                <li>Impersonate others or provide false information</li>
+                <li>Interfere with the platform's operation</li>
+                <li>Engage in fraudulent activities</li>
+                <li>Circumvent our fee structure</li>
+            </ul>
+
+            <!-- Intellectual Property -->
+            <h2>7. Intellectual Property</h2>
+            <p>
+                All content on RentMyVenue, including but not limited to text, graphics, logos, and software, 
+                is our property and protected by intellectual property laws.
+            </p>
+
+            <!-- Limitation of Liability -->
+            <h2>8. Limitation of Liability</h2>
+            <p>
+                RentMyVenue is not liable for:
+            </p>
+            <ul>
+                <li>Disputes between users</li>
+                <li>Venue quality or condition</li>
+                <li>User-generated content</li>
+                <li>Indirect or consequential damages</li>
+            </ul>
+
+            <!-- Changes to Terms -->
+            <h2>9. Changes to Terms</h2>
+            <p>
+                We reserve the right to modify these terms at any time. Users will be notified of significant changes.
+                Continued use of the platform constitutes acceptance of modified terms.
+            </p>
+
+            <!-- Termination -->
+            <h2>10. Termination</h2>
+            <p>
+                We reserve the right to terminate or suspend accounts that violate these terms or for any other reason 
+                at our sole discretion.
+            </p>
+        </div>
+
+        <!-- Agreement Section -->
+        <div class="mt-16 bg-gray-50 rounded-lg p-8">
+            <h2 class="text-2xl font-bold text-gray-900">Agreement</h2>
+            <p class="mt-4 text-gray-600">
+                By using RentMyVenue, you acknowledge that you have read, understood, and agree to be bound by these Terms of Service.
+            </p>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="mt-16 flex justify-center space-x-4">
+            <a href="{% url 'core:contact' %}" 
+               class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700">
+                Contact Us
+            </a>
+            <a href="{% url 'core:privacy' %}" 
+               class="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                Privacy Policy
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
