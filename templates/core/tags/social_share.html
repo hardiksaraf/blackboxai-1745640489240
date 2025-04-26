@@ -1,0 +1,88 @@
+<div class="flex space-x-4">
+    <!-- Facebook -->
+    <a href="https://www.facebook.com/sharer/sharer.php?u={{ url|urlencode }}"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="text-gray-400 hover:text-[#1877f2] transition-colors"
+       title="Share on Facebook">
+        <i class="fab fa-facebook-f text-xl"></i>
+        <span class="sr-only">Share on Facebook</span>
+    </a>
+
+    <!-- Twitter -->
+    <a href="https://twitter.com/intent/tweet?url={{ url|urlencode }}&text={{ title|urlencode }}"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="text-gray-400 hover:text-[#1da1f2] transition-colors"
+       title="Share on Twitter">
+        <i class="fab fa-twitter text-xl"></i>
+        <span class="sr-only">Share on Twitter</span>
+    </a>
+
+    <!-- LinkedIn -->
+    <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ url|urlencode }}&title={{ title|urlencode }}"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="text-gray-400 hover:text-[#0a66c2] transition-colors"
+       title="Share on LinkedIn">
+        <i class="fab fa-linkedin-in text-xl"></i>
+        <span class="sr-only">Share on LinkedIn</span>
+    </a>
+
+    <!-- WhatsApp -->
+    <a href="https://wa.me/?text={{ title|urlencode }}%20{{ url|urlencode }}"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="text-gray-400 hover:text-[#25d366] transition-colors"
+       title="Share on WhatsApp">
+        <i class="fab fa-whatsapp text-xl"></i>
+        <span class="sr-only">Share on WhatsApp</span>
+    </a>
+
+    <!-- Copy Link -->
+    <button onclick="copyToClipboard('{{ url }}')"
+            class="text-gray-400 hover:text-indigo-600 transition-colors relative group"
+            title="Copy Link">
+        <i class="fas fa-link text-xl"></i>
+        <span class="sr-only">Copy Link</span>
+        <span class="hidden group-hover:block absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 text-xs text-white bg-gray-900 rounded whitespace-nowrap">
+            Copy Link
+        </span>
+    </button>
+
+    <!-- Email -->
+    <a href="mailto:?subject={{ title|urlencode }}&body=Check%20out%20this%20venue:%20{{ url|urlencode }}"
+       class="text-gray-400 hover:text-gray-600 transition-colors"
+       title="Share via Email">
+        <i class="fas fa-envelope text-xl"></i>
+        <span class="sr-only">Share via Email</span>
+    </a>
+</div>
+
+<script>
+function copyToClipboard(text) {
+    // Create a temporary input element
+    const input = document.createElement('input');
+    input.setAttribute('value', text);
+    document.body.appendChild(input);
+    input.select();
+    
+    try {
+        // Execute the copy command
+        document.execCommand('copy');
+        
+        // Show success message
+        const button = event.currentTarget;
+        const tooltip = button.querySelector('span:last-child');
+        tooltip.textContent = 'Copied!';
+        setTimeout(() => {
+            tooltip.textContent = 'Copy Link';
+        }, 2000);
+    } catch (err) {
+        console.error('Failed to copy text: ', err);
+    }
+    
+    // Remove the temporary input
+    document.body.removeChild(input);
+}
+</script>
