@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}My Addresses{% endblock %}
+{% block content %}
+<h1 class="text-3xl font-bold mb-6">My Addresses</h1>
+<ul class="space-y-4">
+    {% for address in addresses %}
+    <li class="bg-white p-4 rounded shadow">
+        <p>{{ address.address_line1 }}, {{ address.city }}, {{ address.state }}, {{ address.country }}</p>
+        <p>Postal Code: {{ address.postal_code }}</p>
+        <p>Type: {{ address.address_type }}</p>
+        {% if address.is_default %}
+        <p class="text-green-600 font-semibold">Default Address</p>
+        {% endif %}
+    </li>
+    {% empty %}
+    <p>You have no saved addresses.</p>
+    {% endfor %}
+</ul>
+<a href="{% url 'customers:add_address' %}" class="mt-4 inline-block bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">Add New Address</a>
+{% endblock %}
