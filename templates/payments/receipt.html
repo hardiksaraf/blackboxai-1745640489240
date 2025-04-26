@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Payment Receipt{% endblock %}
+{% block content %}
+<h1 class="text-3xl font-bold mb-6">Payment Receipt</h1>
+{% if transaction %}
+<div>
+    <p>Transaction ID: {{ transaction.id }}</p>
+    <p>Status: {{ transaction.status }}</p>
+    <p>Amount: ${{ transaction.amount }}</p>
+    <p>Payment Time: {{ transaction.payment_time }}</p>
+</div>
+{% else %}
+<p>No transaction found.</p>
+{% endif %}
+{% endblock %}
