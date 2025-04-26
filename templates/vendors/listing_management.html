@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Manage Listings{% endblock %}
+{% block content %}
+<h1 class="text-3xl font-bold mb-6">Manage Your Listings</h1>
+{% if listings %}
+<ul class="space-y-4">
+    {% for listing in listings %}
+    <li class="bg-white p-4 rounded shadow">
+        <a href="{% url 'listings:detail' listing.id %}" class="text-indigo-600 hover:underline">{{ listing.title }}</a>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>You have no listings yet.</p>
+{% endif %}
+{% endblock %}
