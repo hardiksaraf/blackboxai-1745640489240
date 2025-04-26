@@ -1,0 +1,148 @@
+{% comment %}
+Usage Example:
+{% include 'core/tags/card.html' with 
+    title='Card Title'
+    subtitle='Optional subtitle'
+    image_url='path/to/image.jpg'
+    footer=True
+    actions=actions
+    hover=True
+    link_url='/detail/'
+%}
+
+Parameters:
+- title: Card title
+- subtitle: Optional subtitle
+- content: Main content
+- image_url: Optional header image
+- footer: Show footer section
+- actions: List of action buttons/links
+- hover: Enable hover effects
+- link_url: Make entire card clickable
+- padding: Custom padding (default: 'p-6')
+- rounded: Custom border radius (default: 'rounded-lg')
+{% endcomment %}
+
+<div class="{% if not padding %}p-6{% else %}{{ padding }}{% endif %} 
+            {% if not rounded %}rounded-lg{% else %}{{ rounded }}{% endif %} 
+            bg-white shadow-sm 
+            {% if hover %}hover:shadow-lg transition-shadow duration-300{% endif %}
+            {% if link_url %}cursor-pointer{% endif %}"
+     {% if link_url %}
+     onclick="window.location.href='{{ link_url }}'"
+     role="link"
+     tabindex="0"
+     {% endif %}>
+    
+    <!-- Card Image -->
+    {% if image_url %}
+    <div class="{% if not rounded %}rounded-t-lg{% else %}{{ rounded }}{% endif %} -mx-6 -mt-6 mb-6 overflow-hidden">
+        <img src="{{ image_url }}" 
+             alt="{{ image_alt|default:title }}"
+             class="w-full h-48 object-cover">
+    </div>
+    {% endif %}
+
+    <!-- Card Header -->
+    {% if title or subtitle %}
+    <div class="mb-4">
+        {% if badge %}
+        <div class="mb-2">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                       {% if badge_color %}{{ badge_color }}{% else %}bg-indigo-100 text-indigo-800{% endif %}">
+                {{ badge }}
+            </span>
+        </div>
+        {% endif %}
+
+        {% if title %}
+        <h3 class="text-lg font-medium text-gray-900 
+                   {% if link_url %}hover:text-indigo-600{% endif %}">
+            {{ title }}
+        </h3>
+        {% endif %}
+
+        {% if subtitle %}
+        <p class="mt-1 text-sm text-gray-500">
+            {{ subtitle }}
+        </p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Card Content -->
+    {% if content %}
+    <div class="prose prose-sm max-w-none">
+        {{ content|safe }}
+    </div>
+    {% endif %}
+
+    <!-- Stats -->
+    {% if stats %}
+    <div class="mt-4 grid grid-cols-{{ stats|length }} gap-4 border-t border-gray-200 pt-4">
+        {% for stat in stats %}
+        <div class="text-center">
+            <p class="text-2xl font-semibold text-gray-900">{{ stat.value }}</p>
+            <p class="text-sm font-medium text-gray-500">{{ stat.label }}</p>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Footer -->
+    {% if footer or actions %}
+    <div class="mt-6 flex items-center justify-between border-t border-gray-200 pt-4">
+        <!-- Footer Content -->
+        {% if footer %}
+        <div class="text-sm text-gray-500">
+            {{ footer|safe }}
+        </div>
+        {% endif %}
+
+        <!-- Actions -->
+        {% if actions %}
+        <div class="flex space-x-3">
+            {% for action in actions %}
+                {% if action.url %}
+                    <a href="{{ action.url }}"
+                       class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md 
+                              {% if action.style == 'primary' %}
+                                text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500
+                              {% else %}
+                                text-gray-700 bg-white hover:bg-gray-50 focus:ring-indigo-500
+                              {% endif %}
+                              focus:outline-none focus:ring-2 focus:ring-offset-2">
+                        {% if action.icon %}
+                        <i class="fas fa-{{ action.icon }} -ml-0.5 mr-2 h-4 w-4"></i>
+                        {% endif %}
+                        {{ action.label }}
+                    </a>
+                {% else %}
+                    <button type="button"
+                            {% if action.onclick %}onclick="{{ action.onclick }}"{% endif %}
+                            class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md 
+                                   {% if action.style == 'primary' %}
+                                     text-white bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500
+                                   {% else %}
+                                     text-gray-700 bg-white hover:bg-gray-50 focus:ring-indigo-500
+                                   {% endif %}
+                                   focus:outline-none focus:ring-2 focus:ring-offset-2">
+                        {% if action.icon %}
+                        <i class="fas fa-{{ action.icon }} -ml-0.5 mr-2 h-4 w-4"></i>
+                        {% endif %}
+                        {{ action.label }}
+                    </button>
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Loading State -->
+    {% if loading %}
+    <div class="absolute inset-0 bg-white bg-opacity-50 flex items-center justify-center rounded-lg">
+        {% include 'core/tags/loading_spinner.html' with size='lg' %}
+    </div>
+    {% endif %}
+</div>
