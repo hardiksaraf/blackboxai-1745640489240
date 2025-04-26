@@ -1,0 +1,168 @@
+{% comment %}
+Usage Example:
+{% include 'core/tags/table.html' with 
+    headers=headers
+    rows=rows
+    sortable=True
+    selectable=True
+    actions=actions
+    empty_message="No data available"
+%}
+{% endcomment %}
+
+<div class="flex flex-col" 
+     x-data="tableData"
+>
+    <!-- Table Wrapper -->
+    <div class="overflow-x-auto">
+        <div class="inline-block min-w-full align-middle">
+            <!-- Table Container -->
+            <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+                {% if rows %}
+                <table class="min-w-full divide-y divide-gray-300">
+                    <!-- Table Header -->
+                    <thead class="bg-gray-50">
+                        <tr>
+                            {% if selectable %}
+                            <th scope="col" class="relative w-12 px-6 sm:w-16 sm:px-8">
+                                <input type="checkbox" 
+                                       class="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 sm:left-6"
+                                       @click="toggleAll()"
+                                       :checked="allSelected"
+                                       :indeterminate="partiallySelected">
+                            </th>
+                            {% endif %}
+
+                            {% for header in headers %}
+                            <th scope="col" 
+                                class="{% if header.width %}{{ header.width }}{% endif %} px-3 py-3.5 text-left text-sm font-semibold text-gray-900 
+                                       {% if header.align == 'center' %}text-center{% elif header.align == 'right' %}text-right{% endif %}">
+                                {% if header.sortable %}
+                                <button type="button" class="group inline-flex" @click="sort('{{ header.key }}')">
+                                    {{ header.label }}
+                                    <span class="ml-2 flex-none rounded text-gray-400 group-hover:visible group-focus:visible">
+                                        <i class="fas" 
+                                           :class="{
+                                               'fa-sort': sortKey !== '{{ header.key }}',
+                                               'fa-sort-up': sortKey === '{{ header.key }}' && sortOrder === 'asc',
+                                               'fa-sort-down': sortKey === '{{ header.key }}' && sortOrder === 'desc'
+                                           }"></i>
+                                    </span>
+                                </button>
+                                {% else %}
+                                {{ header.label }}
+                                {% endif %}
+                            </th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+
+                    <!-- Table Body -->
+                    <tbody class="divide-y divide-gray-200 bg-white">
+                        {% for row in rows %}
+                        <tr class="{% if row.highlight %}bg-indigo-50{% endif %} hover:bg-gray-50">
+                            {% if selectable %}
+                            <td class="relative w-12 px-6 sm:w-16 sm:px-8">
+                                <input type="checkbox" 
+                                       class="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 sm:left-6"
+                                       value="{{ row.id }}"
+                                       @click="toggleRow('{{ row.id }}')"
+                                       :checked="selected.includes('{{ row.id }}')">
+                            </td>
+                            {% endif %}
+
+                            {% for header in headers %}
+                            <td class="whitespace-nowrap px-3 py-4 text-sm 
+                                     {% if header.align == 'center' %}text-center{% elif header.align == 'right' %}text-right{% endif %}
+                                     {% if header.key == 'actions' %}text-right{% endif %}">
+                                {% if header.key == 'actions' %}
+                                    <div class="flex justify-end space-x-3">
+                                        {% for action in actions %}
+                                            {% if action.url %}
+                                                <a href="{{ action.url|format:row.id }}"
+                                                   class="text-gray-400 hover:text-gray-500"
+                                                   title="{{ action.label }}">
+                                                    <i class="fas fa-{{ action.icon }}"></i>
+                                                    <span class="sr-only">{{ action.label }}</span>
+                                                </a>
+                                            {% else %}
+                                                <button type="button"
+                                                        onclick="{{ action.onclick|format:row.id }}"
+                                                        class="text-gray-400 hover:text-gray-500"
+                                                        title="{{ action.label }}">
+                                                    <i class="fas fa-{{ action.icon }}"></i>
+                                                    <span class="sr-only">{{ action.label }}</span>
+                                                </button>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    {% with value=row|get_item:header.key %}
+                                        {% if header.template %}
+                                            {% include header.template with value=value row=row %}
+                                        {% else %}
+                                            {{ value }}
+                                        {% endif %}
+                                    {% endwith %}
+                                {% endif %}
+                            </td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <!-- Empty State -->
+                <div class="text-center py-12">
+                    <i class="fas fa-inbox text-gray-400 text-5xl mb-4"></i>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900">{{ empty_message|default:"No data available" }}</h3>
+                    {% if empty_description %}
+                    <p class="mt-1 text-sm text-gray-500">{{ empty_description }}</p>
+                    {% endif %}
+                    {% if empty_action %}
+                    <div class="mt-6">
+                        <a href="{{ empty_action.url }}" 
+                           class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                            {% if empty_action.icon %}
+                            <i class="fas fa-{{ empty_action.icon }} -ml-0.5 mr-1.5"></i>
+                            {% endif %}
+                            {{ empty_action.label }}
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Actions -->
+    {% if selectable and bulk_actions %}
+    <div class="fixed bottom-0 left-0 right-0 bg-white py-3 shadow-lg transform"
+         x-show="selected.length > 0"
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="translate-y-full"
+         x-transition:enter-end="translate-y-0"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="translate-y-0"
+         x-transition:leave-end="translate-y-full">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+            <div class="flex items-center">
+                <span class="text-sm text-gray-900" x-text="`${selected.length} item${selected.length === 1 ? '' : 's'} selected`"></span>
+            </div>
+            <div class="flex space-x-3">
+                {% for action in bulk_actions %}
+                <button type="button"
+                        onclick="{{ action.onclick }}"
+                        class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    {% if action.icon %}
+                    <i class="fas fa-{{ action.icon }} -ml-0.5 mr-2"></i>
+                    {% endif %}
+                    {{ action.label }}
+                </button>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
