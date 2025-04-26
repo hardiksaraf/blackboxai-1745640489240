@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}Page Not Found - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="min-h-[calc(100vh-200px)] bg-gray-50 flex items-center">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+        <div class="max-w-3xl mx-auto">
+            <!-- 404 Icon -->
+            <div class="mb-8">
+                <i class="fas fa-map-signs text-8xl text-indigo-600"></i>
+            </div>
+            
+            <!-- Error Message -->
+            <h1 class="text-4xl font-extrabold text-gray-900 sm:text-5xl">
+                Page Not Found
+            </h1>
+            <p class="mt-4 text-xl text-gray-500">
+                Sorry, we couldn't find the page you're looking for.
+            </p>
+            
+            <!-- Suggestions -->
+            <div class="mt-10">
+                <h2 class="text-lg font-medium text-gray-900">Here are some helpful links:</h2>
+                <div class="mt-4 flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="{% url 'core:home' %}" 
+                       class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700">
+                        <i class="fas fa-home mr-2"></i>
+                        Go Home
+                    </a>
+                    <a href="{% url 'listings:list' %}" 
+                       class="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        <i class="fas fa-search mr-2"></i>
+                        Browse Venues
+                    </a>
+                    <a href="{% url 'core:contact' %}" 
+                       class="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        <i class="fas fa-envelope mr-2"></i>
+                        Contact Support
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Search Box -->
+            <div class="mt-12">
+                <form action="{% url 'listings:search' %}" method="get" class="max-w-xl mx-auto">
+                    <div class="relative">
+                        <input type="text" 
+                               name="q" 
+                               placeholder="Search for venues..." 
+                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 pl-10">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-search text-gray-400"></i>
+                        </div>
+                        <button type="submit" class="absolute inset-y-0 right-0 px-4 text-gray-500 hover:text-indigo-600">
+                            Search
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
