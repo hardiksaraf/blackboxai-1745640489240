@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Verify Email - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto">
+    <div class="bg-white rounded-lg shadow-md p-8 text-center">
+        <div class="mb-6">
+            <i class="fas fa-envelope text-5xl text-indigo-600"></i>
+        </div>
+        
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">Verify Your Email</h2>
+        
+        <p class="text-gray-600 mb-6">
+            We've sent a verification link to your email address. Please click the link in the email to verify your account.
+        </p>
+        
+        <div class="space-y-4">
+            <p class="text-sm text-gray-500">
+                Didn't receive the email? Check your spam folder or request a new verification link.
+            </p>
+            
+            <form method="post" action="{% url 'users:resend_verification' %}">
+                {% csrf_token %}
+                <button type="submit" class="text-indigo-600 hover:text-indigo-500 font-medium">
+                    Resend Verification Email
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <div class="mt-6 text-center">
+        <p class="text-sm text-gray-600">
+            Already verified? <a href="{% url 'account_login' %}" class="text-indigo-600 hover:text-indigo-500 font-medium">Login here</a>
+        </p>
+    </div>
+</div>
+
+<!-- Help Section -->
+<div class="max-w-2xl mx-auto mt-12">
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">Having Trouble?</h3>
+    
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <div class="space-y-4">
+            <div>
+                <h4 class="font-medium text-gray-800">Check Your Spam Folder</h4>
+                <p class="text-gray-600">Sometimes verification emails can end up in your spam folder. Please check there if you haven't received the email.</p>
+            </div>
+            
+            <div>
+                <h4 class="font-medium text-gray-800">Verify Email Address</h4>
+                <p class="text-gray-600">Make sure you entered your email address correctly during registration.</p>
+            </div>
+            
+            <div>
+                <h4 class="font-medium text-gray-800">Contact Support</h4>
+                <p class="text-gray-600">If you're still having trouble, please <a href="{% url 'support:contact' %}" class="text-indigo-600 hover:text-indigo-500">contact our support team</a>.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
