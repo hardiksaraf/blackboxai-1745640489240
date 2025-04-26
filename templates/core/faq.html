@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block title %}FAQ - {{ block.super }}{% endblock %}
+
+{% block meta_description %}Find answers to frequently asked questions about RentMyVenue's services, booking process, payments, and more.{% endblock %}
+
+{% block content %}
+<!-- FAQ Hero Section -->
+<div class="bg-indigo-700 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-4xl font-extrabold text-white sm:text-5xl">
+            Frequently Asked Questions
+        </h1>
+        <p class="mt-4 text-xl text-indigo-100">
+            Find answers to common questions about our services
+        </p>
+    </div>
+</div>
+
+<!-- Search Section -->
+<div class="bg-white shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="max-w-3xl mx-auto">
+            <div class="relative">
+                <input type="text" 
+                       id="faq-search"
+                       placeholder="Search FAQs..."
+                       class="w-full rounded-lg border-gray-300 pl-10 focus:border-indigo-500 focus:ring-indigo-500"
+                       x-model="searchQuery"
+                       @input="filterFaqs()">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-search text-gray-400"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FAQ Content -->
+<div class="bg-gray-50 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- FAQ Categories -->
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            <!-- Category Navigation -->
+            <div class="lg:col-span-1">
+                <nav class="space-y-1" aria-label="FAQ Categories">
+                    {% for category in faqs %}
+                    <a href="#{{ category.category|slugify }}" 
+                       class="group flex items-center px-3 py-2 text-sm font-medium rounded-md hover:bg-white hover:text-indigo-600">
+                        <span class="truncate">{{ category.category }}</span>
+                        <span class="ml-auto bg-gray-100 text-gray-600 group-hover:bg-indigo-100 group-hover:text-indigo-600 py-0.5 px-2 rounded-full text-xs">
+                            {{ category.questions|length }}
+                        </span>
+                    </a>
+                    {% endfor %}
+                </nav>
+            </div>
+
+            <!-- FAQ Questions and Answers -->
+            <div class="lg:col-span-2">
+                {% for category in faqs %}
+                <div id="{{ category.category|slugify }}" class="mb-12">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-6">{{ category.category }}</h2>
+                    
+                    <div class="space-y-4">
+                        {% for qa in category.questions %}
+                        <div x-data="{ open: false }" class="bg-white rounded-lg shadow-sm">
+                            <button @click="open = !open" 
+                                    class="w-full px-6 py-4 flex items-center justify-between focus:outline-none"
+                                    :aria-expanded="open">
+                                <span class="text-lg font-medium text-gray-900">{{ qa.question }}</span>
+                                <i class="fas transition-transform duration-200"
+                                   :class="{ 'fa-chevron-down': !open, 'fa-chevron-up': open }"></i>
+                            </button>
+                            <div x-show="open" 
+                                 x-transition:enter="transition ease-out duration-200"
+                                 x-transition:enter-start="opacity-0 transform -translate-y-2"
+                                 x-transition:enter-end="opacity-100 transform translate-y-0"
+                                 x-transition:leave="transition ease-in duration-200"
+                                 x-transition:leave-start="opacity-100 transform translate-y-0"
+                                 x-transition:leave-end="opacity-0 transform -translate-y-2"
+                                 class="px-6 pb-4">
+                                <p class="text-gray-500">{{ qa.answer }}</p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Still Have Questions Section -->
+<div class="bg-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mx-auto text-center">
+            <h2 class="text-3xl font-bold text-gray-900">Still have questions?</h2>
+            <p class="mt-4 text-lg text-gray-500">
+                Can't find the answer you're looking for? Please contact our friendly team.
+            </p>
+            <div class="mt-8 flex justify-center space-x-4">
+                <a href="{% url 'core:contact' %}" 
+                   class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700">
+                    Contact Support
+                </a>
+                <a href="tel:1-800-VENUE" 
+                   class="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                    <i class="fas fa-phone mr-2"></i>
+                    Call Us
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('alpine:init', () => {
+    Alpine.data('faqSearch', () => ({
+        searchQuery: '',
+        filterFaqs() {
+            const query = this.searchQuery.toLowerCase();
+            const questions = document.querySelectorAll('.faq-item');
+            
+            questions.forEach(question => {
+                const text = question.textContent.toLowerCase();
+                question.style.display = text.includes(query) ? 'block' : 'none';
+            });
+            
+            // Show/hide category headers based on visible questions
+            document.querySelectorAll('.faq-category').forEach(category => {
+                const visibleQuestions = category.querySelectorAll('.faq-item[style="display: block"]');
+                category.style.display = visibleQuestions.length > 0 ? 'block' : 'none';
+            });
+        }
+    }));
+});
+</script>
+{% endblock %}
