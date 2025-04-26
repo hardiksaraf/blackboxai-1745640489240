@@ -1,0 +1,70 @@
+{% if messages %}
+<div class="fixed inset-x-0 top-0 z-50 pt-16" id="notification-container">
+    {% for message in messages %}
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4"
+         x-data="{ show: true }"
+         x-show="show"
+         x-transition:enter="transform ease-out duration-300 transition"
+         x-transition:enter-start="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+         x-transition:enter-end="translate-y-0 opacity-100 sm:translate-x-0"
+         x-transition:leave="transition ease-in duration-100"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0">
+        <div class="rounded-lg p-4 {% if message.tags %}{{ message.tags }}{% else %}bg-blue-50{% endif %} shadow-lg">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <!-- Icon based on message type -->
+                    <div class="flex-shrink-0">
+                        {% if message.tags == 'success' %}
+                            <i class="fas fa-check-circle text-green-400 text-xl"></i>
+                        {% elif message.tags == 'error' %}
+                            <i class="fas fa-exclamation-circle text-red-400 text-xl"></i>
+                        {% elif message.tags == 'warning' %}
+                            <i class="fas fa-exclamation-triangle text-yellow-400 text-xl"></i>
+                        {% elif message.tags == 'info' %}
+                            <i class="fas fa-info-circle text-blue-400 text-xl"></i>
+                        {% else %}
+                            <i class="fas fa-bell text-blue-400 text-xl"></i>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Message Content -->
+                    <div class="ml-3">
+                        <p class="text-sm font-medium {% if message.tags == 'error' %}text-red-800{% elif message.tags == 'success' %}text-green-800{% elif message.tags == 'warning' %}text-yellow-800{% else %}text-blue-800{% endif %}">
+                            {{ message|safe }}
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Close Button -->
+                <div class="ml-4 flex-shrink-0 flex">
+                    <button @click="show = false"
+                            class="inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <span class="sr-only">Close</span>
+                        <i class="fas fa-times text-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-hide messages after 5 seconds
+    setTimeout(function() {
+        const container = document.getElementById('notification-container');
+        if (container) {
+            const messages = container.querySelectorAll('[x-data]');
+            messages.forEach(message => {
+                const scope = Alpine.$data(message);
+                if (scope) {
+                    scope.show = false;
+                }
+            });
+        }
+    }, 5000);
+});
+</script>
+{% endif %}
