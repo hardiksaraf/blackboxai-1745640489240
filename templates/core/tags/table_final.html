@@ -1,0 +1,69 @@
+{% comment %}
+Usage Example:
+{% include 'core/tags/table.html' with 
+    headers=headers
+    rows=rows
+    sortable=True
+    selectable=True
+    actions=actions
+    empty_message="No data available"
+%}
+{% endcomment %}
+
+<div class="flex flex-col" 
+     x-data="{ 
+         selected: [], 
+         sortKey: '', 
+         sortOrder: 'asc',
+         allSelected: false,
+         partiallySelected: false,
+         totalRows: {{ rows|length|default:0 }},
+         
+         updateSelectedState() {
+             this.allSelected = this.selected.length === this.totalRows;
+             this.partiallySelected = this.selected.length > 0 && !this.allSelected;
+             this.$dispatch('selection-changed', { selected: this.selected, count: this.selected.length });
+         },
+         
+         toggleAll() {
+             if (this.allSelected) {
+                 this.selected = [];
+             } else {
+                 this.selected = Array.from(document.querySelectorAll('input[type=checkbox][value]')).map(cb => cb.value);
+             }
+             this.updateSelectedState();
+         },
+         
+         toggleRow(id) {
+             const idx = this.selected.indexOf(id);
+             if (idx === -1) {
+                 this.selected.push(id);
+             } else {
+                 this.selected.splice(idx, 1);
+             }
+             this.updateSelectedState();
+         },
+         
+         sort(key) {
+             if (this.sortKey === key) {
+                 this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+             } else {
+                 this.sortKey = key;
+                 this.sortOrder = 'asc';
+             }
+             this.$dispatch('sort-changed', { key: this.sortKey, order: this.sortOrder });
+         }
+     }"
+     x-init="updateSelectedState(); $watch('selected', () => updateSelectedState())"
+>
+    <!-- Table Wrapper -->
+    <div class="overflow-x-auto">
+        <div class="inline-block min-w-full align-middle">
+            <!-- Table Container -->
+            <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+                {% if rows %}
+                <table class="min-w-full divide-y divide-gray-300">
+                    <!-- Table Header -->
+                    <thead class="bg-gray-50">
+                        <tr>
+                            {% if selectable
