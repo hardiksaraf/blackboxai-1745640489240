@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Saved Payment Methods{% endblock %}
+{% block content %}
+<h1 class="text-3xl font-bold mb-6">Saved Payment Methods</h1>
+{% if saved_cards %}
+<ul class="space-y-4">
+    {% for card in saved_cards %}
+    <li class="bg-white p-4 rounded shadow">
+        <p>{{ card.card_type }} ending in {{ card.card_last4 }}</p>
+        <p>Expires: {{ card.expiry_month }}/{{ card.expiry_year }}</p>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>You have no saved payment methods.</p>
+{% endif %}
+{% endblock %}
