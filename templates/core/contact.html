@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Contact Us - {{ block.super }}{% endblock %}
+
+{% block meta_description %}Get in touch with RentMyVenue. We're here to help with your venue booking needs, questions, and support requests.{% endblock %}
+
+{% block content %}
+<!-- Contact Hero Section -->
+<div class="bg-indigo-700 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-4xl font-extrabold text-white sm:text-5xl">
+            Get in Touch
+        </h1>
+        <p class="mt-4 text-xl text-indigo-100">
+            We're here to help and answer any questions you might have
+        </p>
+    </div>
+</div>
+
+<!-- Contact Information and Form -->
+<div class="bg-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <!-- Contact Information -->
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-8">Contact Information</h2>
+                
+                <!-- Contact Cards -->
+                <div class="space-y-6">
+                    <!-- Office Address -->
+                    <div class="bg-gray-50 rounded-lg p-6">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <div class="bg-indigo-100 rounded-lg p-3">
+                                    <i class="fas fa-map-marker-alt text-indigo-600 text-xl"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-medium text-gray-900">Office Address</h3>
+                                <p class="mt-2 text-base text-gray-500">
+                                    123 Venue Street<br>
+                                    Suite 456<br>
+                                    New York, NY 10001
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="bg-gray-50 rounded-lg p-6">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <div class="bg-indigo-100 rounded-lg p-3">
+                                    <i class="fas fa-envelope text-indigo-600 text-xl"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-medium text-gray-900">Email</h3>
+                                <p class="mt-2 text-base text-gray-500">
+                                    General Inquiries: info@rentmyvenue.com<br>
+                                    Support: support@rentmyvenue.com
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="bg-gray-50 rounded-lg p-6">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0">
+                                <div class="bg-indigo-100 rounded-lg p-3">
+                                    <i class="fas fa-phone text-indigo-600 text-xl"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h3 class="text-lg font-medium text-gray-900">Phone</h3>
+                                <p class="mt-2 text-base text-gray-500">
+                                    Toll Free: 1-800-VENUE<br>
+                                    Support Hours: Mon-Fri, 9am-6pm EST
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Social Media Links -->
+                <div class="mt-8">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Follow Us</h3>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-indigo-600">
+                            <i class="fab fa-facebook-f text-2xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-indigo-600">
+                            <i class="fab fa-twitter text-2xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-indigo-600">
+                            <i class="fab fa-instagram text-2xl"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-indigo-600">
+                            <i class="fab fa-linkedin-in text-2xl"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-8">Send us a Message</h2>
+                
+                <form method="post" class="space-y-6">
+                    {% csrf_token %}
+                    
+                    {{ form|crispy }}
+
+                    <div class="flex items-start">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-shield-alt text-indigo-600 text-xl"></i>
+                        </div>
+                        <p class="ml-3 text-sm text-gray-500">
+                            Your information is protected by our 
+                            <a href="{% url 'core:privacy' %}" class="text-indigo-600 hover:text-indigo-500">Privacy Policy</a>
+                        </p>
+                    </div>
+
+                    <div>
+                        <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            Send Message
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FAQ Section -->
+<div class="bg-gray-50 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h2 class="text-3xl font-bold text-gray-900">Frequently Asked Questions</h2>
+            <p class="mt-4 text-lg text-gray-500">
+                Find quick answers to common questions
+            </p>
+        </div>
+
+        <div class="mt-12 max-w-3xl mx-auto">
+            <div class="space-y-6">
+                <!-- FAQ Item -->
+                <div x-data="{ open: false }" class="bg-white rounded-lg shadow-sm">
+                    <button @click="open = !open" class="w-full px-6 py-4 flex items-center justify-between focus:outline-none">
+                        <span class="text-lg font-medium text-gray-900">How do I book a venue?</span>
+                        <i class="fas" :class="{ 'fa-chevron-down': !open, 'fa-chevron-up': open }"></i>
+                    </button>
+                    <div x-show="open" class="px-6 pb-4">
+                        <p class="text-gray-500">
+                            Browse our venues, select your preferred date and time, and follow the booking process. You can pay securely through our platform.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ Item -->
+                <div x-data="{ open: false }" class="bg-white rounded-lg shadow-sm">
+                    <button @click="open = !open" class="w-full px-6 py-4 flex items-center justify-between focus:outline-none">
+                        <span class="text-lg font-medium text-gray-900">What payment methods do you accept?</span>
+                        <i class="fas" :class="{ 'fa-chevron-down': !open, 'fa-chevron-up': open }"></i>
+                    </button>
+                    <div x-show="open" class="px-6 pb-4">
+                        <p class="text-gray-500">
+                            We accept all major credit cards, debit cards, and digital wallets. All payments are processed securely.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FAQ Item -->
+                <div x-data="{ open: false }" class="bg-white rounded-lg shadow-sm">
+                    <button @click="open = !open" class="w-full px-6 py-4 flex items-center justify-between focus:outline-none">
+                        <span class="text-lg font-medium text-gray-900">What is your cancellation policy?</span>
+                        <i class="fas" :class="{ 'fa-chevron-down': !open, 'fa-chevron-up': open }"></i>
+                    </button>
+                    <div x-show="open" class="px-6 pb-4">
+                        <p class="text-gray-500">
+                            Cancellation policies vary by venue. Each venue listing clearly displays their specific cancellation terms.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 text-center">
+                <a href="{% url 'core:faq' %}" class="text-indigo-600 hover:text-indigo-500 font-medium">
+                    View all FAQs <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
