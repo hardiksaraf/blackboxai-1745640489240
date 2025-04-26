@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Payment Gateway{% endblock %}
+{% block content %}
+<h1 class="text-3xl font-bold mb-6">Payment for Booking #{{ booking.id }}</h1>
+<form method="post" class="max-w-md">
+    {% csrf_token %}
+    <p>Amount to pay: ${{ booking.total_amount }}</p>
+    <!-- Payment form fields to be integrated with payment gateway -->
+    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700">Pay Now</button>
+</form>
+{% endblock %}
