@@ -1,0 +1,41 @@
+<svg class="{{ dimensions }} animate-spin" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Spinner Track -->
+    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+    
+    <!-- Spinner Active Section -->
+    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+    </path>
+    
+    <!-- Color Classes -->
+    {% if color == 'indigo' %}
+    <style>
+        circle { stroke: #6366f1; }
+        path { fill: #6366f1; }
+    </style>
+    {% elif color == 'blue' %}
+    <style>
+        circle { stroke: #3b82f6; }
+        path { fill: #3b82f6; }
+    </style>
+    {% elif color == 'green' %}
+    <style>
+        circle { stroke: #10b981; }
+        path { fill: #10b981; }
+    </style>
+    {% elif color == 'red' %}
+    <style>
+        circle { stroke: #ef4444; }
+        path { fill: #ef4444; }
+    </style>
+    {% elif color == 'yellow' %}
+    <style>
+        circle { stroke: #f59e0b; }
+        path { fill: #f59e0b; }
+    </style>
+    {% elif color == 'gray' %}
+    <style>
+        circle { stroke: #6b7280; }
+        path { fill: #6b7280; }
+    </style>
+    {% endif %}
+</svg>
