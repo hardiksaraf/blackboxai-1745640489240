@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Server Error - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="min-h-[calc(100vh-200px)] bg-gray-50 flex items-center">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+        <div class="max-w-3xl mx-auto">
+            <!-- Error Icon -->
+            <div class="mb-8">
+                <i class="fas fa-exclamation-triangle text-8xl text-yellow-500"></i>
+            </div>
+            
+            <!-- Error Message -->
+            <h1 class="text-4xl font-extrabold text-gray-900 sm:text-5xl">
+                Oops! Something went wrong
+            </h1>
+            <p class="mt-4 text-xl text-gray-500">
+                We're experiencing some technical difficulties. Our team has been notified and is working to fix the issue.
+            </p>
+            
+            <!-- Actions -->
+            <div class="mt-10">
+                <h2 class="text-lg font-medium text-gray-900">Here's what you can do:</h2>
+                <div class="mt-4 flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                    <button onclick="window.location.reload()" 
+                            class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700">
+                        <i class="fas fa-redo mr-2"></i>
+                        Refresh Page
+                    </button>
+                    <a href="/" 
+                       class="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        <i class="fas fa-home mr-2"></i>
+                        Go Home
+                    </a>
+                    <a href="/contact/" 
+                       class="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        <i class="fas fa-envelope mr-2"></i>
+                        Contact Support
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Support Information -->
+            <div class="mt-12 bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-medium text-gray-900">Need immediate assistance?</h3>
+                <p class="mt-2 text-gray-500">
+                    Our support team is available 24/7 to help you.
+                </p>
+                <div class="mt-4 flex justify-center space-x-6">
+                    <a href="tel:1-800-VENUE" class="text-indigo-600 hover:text-indigo-500">
+                        <i class="fas fa-phone mr-2"></i>
+                        1-800-VENUE
+                    </a>
+                    <a href="mailto:support@rentmyvenue.com" class="text-indigo-600 hover:text-indigo-500">
+                        <i class="fas fa-envelope mr-2"></i>
+                        support@rentmyvenue.com
+                    </a>
+                </div>
+            </div>
+
+            <!-- Error Details -->
+            <div class="mt-12 text-sm text-gray-500">
+                <p>Error Code: 500</p>
+                <p>If this issue persists, please include this error code when contacting support.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Automatic Refresh -->
+<script>
+    // Automatically refresh the page after 30 seconds
+    setTimeout(function() {
+        window.location.reload();
+    }, 30000);
+</script>
+{% endblock %}
