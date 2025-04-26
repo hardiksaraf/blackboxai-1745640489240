@@ -1,0 +1,31 @@
+{% comment %}
+Usage: {% include 'core/tags/loading_spinner.html' with size='lg' color='indigo' %}
+Sizes: sm, md, lg, xl
+Colors: indigo, blue, green, red, yellow, gray
+{% endcomment %}
+
+{% with size=size|default:'md' color=color|default:'indigo' %}
+<div class="flex items-center justify-center" role="status">
+    <!-- Spinner sizes -->
+    {% if size == 'sm' %}
+        {% with dimensions='h-4 w-4' %}
+            {% include 'core/tags/loading_spinner_content.html' %}
+        {% endwith %}
+    {% elif size == 'md' %}
+        {% with dimensions='h-8 w-8' %}
+            {% include 'core/tags/loading_spinner_content.html' %}
+        {% endwith %}
+    {% elif size == 'lg' %}
+        {% with dimensions='h-12 w-12' %}
+            {% include 'core/tags/loading_spinner_content.html' %}
+        {% endwith %}
+    {% elif size == 'xl' %}
+        {% with dimensions='h-16 w-16' %}
+            {% include 'core/tags/loading_spinner_content.html' %}
+        {% endwith %}
+    {% endif %}
+    
+    <!-- Screen reader text -->
+    <span class="sr-only">Loading...</span>
+</div>
+{% endwith %}
